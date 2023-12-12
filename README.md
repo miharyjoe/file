@@ -8,9 +8,9 @@ as many possible
 
 ## How to launch the project
  - Clone the repostiory project:
-
-    git clone -b feature/java https://github.com/hei-school/cc-hei-hub-bughunter.git
-
+   ```bash
+   git clone -b feature/java https://github.com/hei-school/cc-hei-hub-bughunter.git
+   ```
  - Open the file in IntelIj to launch
  - Open in the navigator: http://localhost:8080/
  - Or in Postman to try the app
