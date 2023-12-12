@@ -1,4 +1,4 @@
-package org.handling.handlingerror;
+package org.handling.UploadingFilesApplication;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
