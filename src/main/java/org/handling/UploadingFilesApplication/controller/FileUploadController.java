@@ -3,11 +3,13 @@ package org.handling.UploadingFilesApplication.controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import org.handling.UploadingFilesApplication.Exception.FileTooLargeException;
 import org.handling.UploadingFilesApplication.Exception.StorageFileNotFoundException;
 import org.handling.UploadingFilesApplication.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,5 +73,8 @@ public class FileUploadController {
   public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
     return ResponseEntity.notFound().build();
   }
-
+  @ExceptionHandler({FileTooLargeException.class})
+  public ResponseEntity<String> handleFileTooLargeException(FileTooLargeException exc) {
+    return ResponseEntity.status(HttpStatus.REQUEST_ENTITY_TOO_LARGE).body(exc.getMessage());
+  }
 }

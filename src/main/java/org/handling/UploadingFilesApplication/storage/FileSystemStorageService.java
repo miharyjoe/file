@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import org.handling.UploadingFilesApplication.Exception.FileTooLargeException;
 import org.handling.UploadingFilesApplication.Exception.StorageException;
 import org.handling.UploadingFilesApplication.Exception.StorageFileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileSystemStorageService implements StorageService {
 
   private final Path rootLocation;
+
+  private final long maxFileSize = 5000 * 1024;
 
   @Autowired
   public FileSystemStorageService(StorageProperties properties) {
@@ -39,6 +42,9 @@ public class FileSystemStorageService implements StorageService {
     try {
       if (file.isEmpty()) {
         throw new StorageException("Failed to store empty file.");
+      }
+      if(file.getSize() > maxFileSize){
+        throw new FileTooLargeException("File size exceeds the allowed limit");
       }
       Path destinationFile = this.rootLocation.resolve(
           Paths.get(file.getOriginalFilename()))
