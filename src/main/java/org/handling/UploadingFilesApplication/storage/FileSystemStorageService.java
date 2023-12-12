@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import org.handling.UploadingFilesApplication.Exception.DuplicatedFileException;
 import org.handling.UploadingFilesApplication.Exception.FileTooLargeException;
 import org.handling.UploadingFilesApplication.Exception.StorageException;
 import org.handling.UploadingFilesApplication.Exception.StorageFileNotFoundException;
@@ -49,6 +50,11 @@ public class FileSystemStorageService implements StorageService {
       Path destinationFile = this.rootLocation.resolve(
           Paths.get(file.getOriginalFilename()))
         .normalize().toAbsolutePath();
+
+      if (Files.exists(destinationFile)) {
+        throw new DuplicatedFileException("A file with the same name already exists.");
+      }
+
       if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
         // This is a security check
         throw new StorageException(
