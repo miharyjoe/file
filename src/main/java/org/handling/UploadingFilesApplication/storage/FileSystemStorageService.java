@@ -49,6 +49,10 @@ public class FileSystemStorageService implements StorageService {
       if (!isFilenameValid(file.getOriginalFilename())) {
         throw new FilenameInvalidException("Invalid filename.");
       }
+      //Check if the file is sensitive
+      if (isFileSensitive(file)) {
+        throw new SensitiveFileException("Sensitive file detected.");
+      }
       Path destinationFile = this.rootLocation.resolve(
           Paths.get(file.getOriginalFilename()))
         .normalize().toAbsolutePath();
@@ -77,6 +81,10 @@ public class FileSystemStorageService implements StorageService {
     return filename.endsWith(".txt");
   }
 
+  private boolean isFileSensitive(MultipartFile file) {
+    //let's assume files with "confidential" in the filename are sensitive
+    return file.getOriginalFilename().toLowerCase().contains("confidential");
+  }
   private boolean isFilenameValid(String filename) {
     // filenames must not contain spaces
     return !filename.contains(" ");

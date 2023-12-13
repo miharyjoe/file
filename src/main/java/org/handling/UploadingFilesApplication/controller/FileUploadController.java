@@ -91,4 +91,9 @@ public class FileUploadController {
   public ResponseEntity<String> handleFilenameInvalidException(FilenameInvalidException exc) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exc.getMessage());
   }
+
+  @ExceptionHandler(SensitiveFileException.class)
+  public ResponseEntity<String> handleSensitiveFileException(SensitiveFileException exc) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exc.getMessage());
+  }
 }
