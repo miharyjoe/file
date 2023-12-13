@@ -46,6 +46,9 @@ public class FileSystemStorageService implements StorageService {
       if (isFileTypeAllowed(file.getOriginalFilename())) {
         throw new BadFileTypeException("Invalid or disallowed file type.");
       }
+      if (!isFilenameValid(file.getOriginalFilename())) {
+        throw new FilenameInvalidException("Invalid filename.");
+      }
       Path destinationFile = this.rootLocation.resolve(
           Paths.get(file.getOriginalFilename()))
         .normalize().toAbsolutePath();
@@ -72,6 +75,11 @@ public class FileSystemStorageService implements StorageService {
   //File ends with .txt is not allowed
   private boolean isFileTypeAllowed(String filename) {
     return filename.endsWith(".txt");
+  }
+
+  private boolean isFilenameValid(String filename) {
+    // filenames must not contain spaces
+    return !filename.contains(" ");
   }
 
   @Override

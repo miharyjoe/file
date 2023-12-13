@@ -3,10 +3,7 @@ package org.handling.UploadingFilesApplication.controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
-import org.handling.UploadingFilesApplication.Exception.BadFileTypeException;
-import org.handling.UploadingFilesApplication.Exception.DuplicatedFileException;
-import org.handling.UploadingFilesApplication.Exception.FileTooLargeException;
-import org.handling.UploadingFilesApplication.Exception.StorageFileNotFoundException;
+import org.handling.UploadingFilesApplication.Exception.*;
 import org.handling.UploadingFilesApplication.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -87,6 +84,11 @@ public class FileUploadController {
 
   @ExceptionHandler(BadFileTypeException.class)
   public ResponseEntity<String> handleBadFileTypeException(BadFileTypeException exc) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exc.getMessage());
+  }
+
+  @ExceptionHandler(FilenameInvalidException.class)
+  public ResponseEntity<String> handleFilenameInvalidException(FilenameInvalidException exc) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exc.getMessage());
   }
 }
