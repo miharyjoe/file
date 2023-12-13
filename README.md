@@ -13,7 +13,10 @@ as many possible
    ```
  - Open the file in IntelIj to launch
  - Open in the navigator: http://localhost:8080/
- - Or in Postman to try the app
+ - Or in Postman to try the app:
+   - Add the following parameters before you launch a post request in postman
+        * Add in Header: Content-Type : multipart/form-data
+        * Add in Body: file change the type to file and upload your file
 
 
 Note: the file upload is put in upload-dir
