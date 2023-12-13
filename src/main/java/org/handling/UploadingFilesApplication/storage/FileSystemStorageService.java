@@ -9,10 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
-import org.handling.UploadingFilesApplication.Exception.DuplicatedFileException;
-import org.handling.UploadingFilesApplication.Exception.FileTooLargeException;
-import org.handling.UploadingFilesApplication.Exception.StorageException;
-import org.handling.UploadingFilesApplication.Exception.StorageFileNotFoundException;
+import org.handling.UploadingFilesApplication.Exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -47,6 +44,9 @@ public class FileSystemStorageService implements StorageService {
       if(file.getSize() > maxFileSize){
         throw new FileTooLargeException("File size exceeds the allowed limit");
       }
+      if (isFileTypeAllowed(file.getOriginalFilename())) {
+        throw new BadFileTypeException("Invalid or disallowed file type.");
+      }
       Path destinationFile = this.rootLocation.resolve(
           Paths.get(file.getOriginalFilename()))
         .normalize().toAbsolutePath();
@@ -60,6 +60,7 @@ public class FileSystemStorageService implements StorageService {
         throw new StorageException(
           "Cannot store file outside current directory.");
       }
+
       try (InputStream inputStream = file.getInputStream()) {
         Files.copy(inputStream, destinationFile,
           StandardCopyOption.REPLACE_EXISTING);
@@ -68,6 +69,10 @@ public class FileSystemStorageService implements StorageService {
     catch (IOException e) {
       throw new StorageException("Failed to store file.", e);
     }
+  }
+  //File ends with .txt is not allowed
+  private boolean isFileTypeAllowed(String filename) {
+    return filename.endsWith(".txt");
   }
 
   @Override

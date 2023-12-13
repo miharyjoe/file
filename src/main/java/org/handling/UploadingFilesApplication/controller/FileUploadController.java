@@ -3,6 +3,7 @@ package org.handling.UploadingFilesApplication.controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import org.handling.UploadingFilesApplication.Exception.BadFileTypeException;
 import org.handling.UploadingFilesApplication.Exception.DuplicatedFileException;
 import org.handling.UploadingFilesApplication.Exception.FileTooLargeException;
 import org.handling.UploadingFilesApplication.Exception.StorageFileNotFoundException;
@@ -82,5 +83,10 @@ public class FileUploadController {
   @ExceptionHandler(DuplicatedFileException.class)
   public ResponseEntity<String> handleDuplicatedFileException(DuplicatedFileException exc) {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(exc.getMessage());
+  }
+
+  @ExceptionHandler(BadFileTypeException.class)
+  public ResponseEntity<String> handleBadFileTypeException(BadFileTypeException exc) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exc.getMessage());
   }
 }
